@@ -24,7 +24,15 @@ const languages = {
     "en-nl": "opus-mt-en-nl",
     "nl-en": "opus-mt-nl-en",
     "en-ko": "opus-mt-tc-big-en-ko",
-    "ko-en": "opus-mt-tc-big-ko-en"
+    "ko-en": "opus-mt-tc-big-ko-en",
+    "en-ur": "opus-mt-en-ur",
+    "ur-en": "opus-mt-ur-en",
+    "en-hi": "opus-mt-en-hi",
+    "hi-en": "opus-mt-hi-en",
+    "en-po": "opus-mt-en-bzs",
+    "po-en": "opus-mt-bzs-en",
+    "en-id": "opus-mt-en-id",
+    "id-en": "opus-mt-id-en",
 }
 
 
