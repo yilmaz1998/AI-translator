@@ -39,7 +39,7 @@ const Translation = () => {
   }
 
   return (
-    <div className="p-4">
+    <div className="p-24">
       <h1 className="text-4xl text-center font-bold">AI Translator</h1>
       <form onSubmit={handleSubmit} className="mt-4 space-y-4">
 
