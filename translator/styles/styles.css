@@ -1,3 +1,14 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@media (max-width: 500px) {
+    .trans {
+        padding: 30px;
+        margin-top: 40px;
+    }
+}
+
+main {
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+}

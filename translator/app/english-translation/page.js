@@ -2,6 +2,7 @@
 
 import { useState } from "react"
 import Link from "next/link"
+import { motion } from 'framer-motion'
 
 const Translation = () => {
   const [inputText, setInputText] = useState("")
@@ -39,7 +40,11 @@ const Translation = () => {
   }
 
   return (
-    <div className="p-24">
+    <motion.div 
+    initial={{ opacity: 0, y: 170 }}
+    animate={{ opacity: 1, y: 0 }}
+    transition={{ duration: 0.7 }}
+    className="trans p-24">
       <h1 className="text-4xl text-center font-bold">AI Translator</h1>
       <form onSubmit={handleSubmit} className="mt-4 space-y-4">
 
@@ -89,7 +94,7 @@ const Translation = () => {
         </div>
       )}
       <Link className="mt-2 btn btn-danger" href={'/'}>Go Back</Link>
-    </div>
+    </motion.div>
   )
 }
 
