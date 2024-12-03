@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import Link from "next/link"
 import { motion } from 'framer-motion'
 
@@ -11,44 +11,53 @@ const Translation = () => {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState("")
 
-  const handleSubmit = async (e) => {
-    e.preventDefault()
-    setLoading(true)
-    setError("")
-
-    try {
-      const response = await fetch("/api/huggingface", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ inputs: inputText, language: targetLanguage }),
-      });
-
-      const data = await response.json()
-
-      if (response.ok) {
-        setTranslation(data[0]?.translation_text || "No translation found.")
-      } else {
-        setError(data.error || "An error occurred.")
-      }
-    } catch (err) {
-      setError("Failed to connect to the server.")
-    } finally {
-      setLoading(false)
+  useEffect(() => {
+    if (!inputText.trim()) {
+      setTranslation("")
+      return
     }
-  }
+
+    const fetchTranslation = async () => {
+      setLoading(true)
+      setError("")
+      setTranslation("")
+
+      try {
+        const response = await fetch("/api/huggingface", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ inputs: inputText, language: targetLanguage }),
+        });
+
+        const data = await response.json()
+
+        if (response.ok) {
+          setTranslation(data[0]?.translation_text || "No translation found.")
+        } else {
+          setError(data.error || "An error occurred.")
+        }
+      } catch (err) {
+        setError("Failed to connect to the server.")
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    fetchTranslation();
+  }, [inputText, targetLanguage])
 
   return (
-    <motion.div 
-    initial={{ opacity: 0, y: 170 }}
-    animate={{ opacity: 1, y: 0 }}
-    transition={{ duration: 0.7 }}
-    className="trans p-24">
+    <motion.div
+      initial={{ opacity: 0, y: 170 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.7 }}
+      className="trans p-24"
+    >
       <h1 className="text-4xl text-center font-bold">AI Translator</h1>
-      <form onSubmit={handleSubmit} className="mt-4 space-y-4">
-
-      <select
+      <form className="mt-4 space-y-4">
+        <select
           className="w-full p-2 border rounded bg-black text-white"
           value={targetLanguage}
           onChange={(e) => setTargetLanguage(e.target.value)}
@@ -77,15 +86,9 @@ const Translation = () => {
           onChange={(e) => setInputText(e.target.value)}
           required
         ></textarea>
-
-        <button
-          type="submit"
-          className="btn btn-primary"
-        >
-          {loading ? "Translating..." : "Translate"}
-        </button>
       </form>
 
+      {loading && <p>Translating...</p>}
       {error && <p className="text-red-500 mt-4">{error}</p>}
       {translation && (
         <div className="mt-4 p-4 border rounded bg-gray-600">
@@ -93,7 +96,9 @@ const Translation = () => {
           <p>{translation}</p>
         </div>
       )}
-      <Link className="mt-2 btn btn-danger" href={'/'}>Go Back</Link>
+      <Link className="mt-2 btn btn-danger" href={"/"}>
+        Go Back
+      </Link>
     </motion.div>
   )
 }
