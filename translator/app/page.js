@@ -17,13 +17,8 @@ const Page = () => {
             This project supports translation in 15 of the world's most spoken languages. Let AI bridge the gap and bring your words to life.
           </p>
           <div>
-            <Link className="btn btn-secondary" href={'/english-translation'}>
-              English to Chosen Language
-            </Link>
-          </div>
-          <div className="mt-2">
-            <Link className="btn btn-secondary" href={'/translation-to-english'}>
-              Chosen Language to English
+            <Link className="btn btn-secondary" href={'/translate'}>
+              Start Translate
             </Link>
           </div>
         </div>
