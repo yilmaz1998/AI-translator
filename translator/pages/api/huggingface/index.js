@@ -68,7 +68,7 @@ export default async function handler(req, res) {
     console.error(error)
   }
 retries --
-await new Promise(resend => setTimeout(resend, 7000))
+await new Promise(resend => setTimeout(resend, 15000))
 }
 return res.status(500).json({ error: 'Translation failed after retries' })
 }
