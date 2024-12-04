@@ -1,6 +1,4 @@
-import { HfInference } from "@huggingface/inference"
-
-const client = new HfInference(process.env.HUGGINGFACE_API_KEY)
+import axios from "axios"
 
 const languages = {
     "en-tr": "opus-mt-tc-big-en-tr",
@@ -54,20 +52,18 @@ export default async function handler(req, res) {
   }
 
   try {
-    const response = await fetch(
+    const { data } = await axios.post(
       `https://api-inference.huggingface.co/models/Helsinki-NLP/${model}`,
+      { inputs },
       {
         headers: {
-          Authorization: `Bearer ${process.env.HUGGINGFACE_API_KEY}`, 
+          Authorization: `Bearer ${process.env.HUGGINGFACE_API_KEY}`,
           "Content-Type": "application/json",
         },
-        method: "POST",
-        body: JSON.stringify({ inputs }),
+        timeout: 10000
       }
-    );
-
-    const result = await response.json()
-    return res.status(200).json(result)
+    )
+    return res.status(200).json(data)
   } catch (error) {
     console.error(error)
     return res.status(500).json({ error: 'Translation failed' })

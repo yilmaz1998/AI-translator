@@ -1,8 +1,9 @@
 'use client'
 
-import { useState, useEffect } from "react"
+import { useState } from "react"
 import Link from "next/link"
 import { motion } from 'framer-motion'
+import axios from "axios"
 
 const Translation = () => {
   const [inputText, setInputText] = useState("")
@@ -11,42 +12,33 @@ const Translation = () => {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState("")
 
-  useEffect(() => {
+  const handleTranslate = async (e) => {
+    e.preventDefault()
+
     if (!inputText.trim()) {
-      setTranslation("")
+      setError("Please enter text to translate.")
       return
     }
+    setLoading(true)
+    setError("")
+    setTranslation("")
 
-    const fetchTranslation = async () => {
-      setLoading(true)
-      setError("")
-      setTranslation("")
+    try {
+      const response = await axios.post("/api/huggingface", {
+        inputs: inputText,
+        language: targetLanguage,
+      }, {
+        timeout: 10000
+      })
 
-      try {
-        const response = await fetch("/api/huggingface", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ inputs: inputText, language: targetLanguage }),
-        });
-
-        const data = await response.json()
-
-        if (response.ok) {
-          setTranslation(data[0]?.translation_text || "No translation found.")
-        } else {
-          setError(data.error || "An error occurred.")
-        }
-      } catch (err) {
-        setError("Failed to connect to the server.")
-      } finally {
-        setLoading(false)
-      }
+      const data = response.data
+      setTranslation(data[0]?.translation_text || "No translation found.")
+    } catch (err) {
+      setError(err.response?.data?.error || "Failed to connect to the server.")
+    } finally {
+      setLoading(false)
     }
-
-    fetchTranslation();
-  }, [inputText, targetLanguage])
+  }
 
   return (
     <motion.div
@@ -56,14 +48,14 @@ const Translation = () => {
       className="trans p-24"
     >
       <h1 className="text-4xl text-center font-bold">AI Translator</h1>
-      <form className="mt-4 space-y-4">
+      <form onSubmit={handleTranslate} className="mt-4 space-y-4">
         <select
           className="w-full p-2 border rounded bg-black text-white"
           value={targetLanguage}
           onChange={(e) => setTargetLanguage(e.target.value)}
         >
           <option value="es-en">Spanish to English</option>
-          <option value="po-en">Potuguese to English</option>
+          <option value="po-en">Portuguese to English</option>
           <option value="fr-en">French to English</option>
           <option value="de-en">German to English</option>
           <option value="it-en">Italian to English</option>
@@ -86,6 +78,13 @@ const Translation = () => {
           onChange={(e) => setInputText(e.target.value)}
           required
         ></textarea>
+
+        <button
+          type="submit"
+          className="btn btn-primary"
+        >
+          Translate
+        </button>
       </form>
 
       {loading && <p>Translating...</p>}
