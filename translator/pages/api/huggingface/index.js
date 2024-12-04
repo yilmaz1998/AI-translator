@@ -50,8 +50,9 @@ export default async function handler(req, res) {
   if(!model) {
     return res.status(400).json({ error: "Unsupported target language" })
   }
-
-  try {
+  let retries = 3
+  while (retries > 0 ) {
+      try {
     const { data } = await axios.post(
       `https://api-inference.huggingface.co/models/Helsinki-NLP/${model}`,
       { inputs },
@@ -60,12 +61,14 @@ export default async function handler(req, res) {
           Authorization: `Bearer ${process.env.HUGGINGFACE_API_KEY}`,
           "Content-Type": "application/json",
         },
-        timeout: 10000
       }
     )
     return res.status(200).json(data)
   } catch (error) {
     console.error(error)
-    return res.status(500).json({ error: 'Translation failed' })
   }
+retries --
+await new Promise(resend => setTimeout(resend, 7000))
+}
+return res.status(500).json({ error: 'Translation failed after retries' })
 }

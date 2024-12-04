@@ -27,8 +27,6 @@ const Translation = () => {
       const response = await axios.post("/api/huggingface", {
         inputs: inputText,
         language: targetLanguage,
-      }, {
-        timeout: 30000
       })
 
       const data = response.data
