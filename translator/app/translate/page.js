@@ -62,7 +62,7 @@ const Translation = () => {
           Translate from English
         </button>
         <button
-          className={`px-4 py-2 mx-2 border text-black ${mode === "other-to-en" ? "bg-blue-500 text-white" : "bg-gray-300"}`}
+          className={`but px-4 py-2 mx-2 border text-black ${mode === "other-to-en" ? "bg-blue-500 text-white" : "bg-gray-300"}`}
           onClick={() => {
             setMode("other-to-en")
             setTargetLanguage("es-en")
