@@ -72,7 +72,7 @@ export default async function handler(req, res) {
       return res.status(200).json(data)
     } catch (error) {
       retries--
-      console.error(error.message)
+      console.error(error.message )
     }
   }
   return res.status(500).json({error: 'Translation failed after retries'})
