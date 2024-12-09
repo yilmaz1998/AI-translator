@@ -75,5 +75,5 @@ export default async function handler(req, res) {
       console.error(error.message)
     }
   }
-  return res.status(500).json({error: 'Translation failed after retries'})
+  return res.status(500).json({error: 'Translation failed after retries. Please try again.'})
 }
